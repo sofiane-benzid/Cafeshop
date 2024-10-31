@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainPageActivity">
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="412dp"
+        android:layout_height="58dp"
+        android:background="@color/navbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="728dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/img" />
+
+    <TextView
+        android:id="@+id/CartTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="440dp"
+        android:fontFamily="sans-serif-light"
+        android:textColor="@color/white"
+        android:textSize="38sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.113"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.117"
+        tools:text="Hi user" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintVertical_bias="0.044" />
+
+    <Button
+        android:id="@+id/hotBtn"
+        android:layout_width="136dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="117dp"
+        android:text="Hot"
+        android:textColor="@color/gray"
+        android:textSize="20dp"
+        app:backgroundTint="@android:color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/coldBtn"
+        android:layout_width="136dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="117dp"
+        android:text="Cold"
+        android:textColor="@color/gray"
+        android:textSize="20dp"
+        app:backgroundTint="@android:color/transparent"
+        app:layout_constraintStart_toEndOf="@+id/hotBtn"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/foodBtn"
+        android:layout_width="136dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="117dp"
+        android:text="Food"
+        android:textColor="@color/gray"
+        android:textSize="20dp"
+        app:backgroundTint="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="410dp"
+        android:layout_height="623dp"
+        android:horizontalSpacing="2dp"
+        android:numColumns="2"
+        android:verticalSpacing="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        app:layout_constraintVertical_bias="0.0">
+
+    </GridView>
+
+    <ImageButton
+        android:id="@+id/CartBtn"
+        android:layout_width="75dp"
+        android:layout_height="69dp"
+        android:layout_marginTop="632dp"
+        android:layout_marginEnd="68dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gridView"
+        app:srcCompat="@drawable/cart2"
+        android:contentDescription="@string/cart_button_description"/>
+
+    <ImageButton
+        android:id="@+id/HomeBtn"
+        android:layout_width="75dp"
+        android:layout_height="67dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="632dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gridView"
+        app:srcCompat="@drawable/home"
+        android:contentDescription="@string/home_button_description"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

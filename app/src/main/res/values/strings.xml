@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Coffee Shop</string>
+    <string name="cart_button_description">Cart button</string>
+    <string name="home_button_description">Home button</string>
+
+
+</resources>
