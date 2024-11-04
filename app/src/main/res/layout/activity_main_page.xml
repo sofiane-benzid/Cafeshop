@@ -61,9 +61,9 @@
         android:layout_width="136dp"
         android:layout_height="52dp"
         android:layout_marginTop="117dp"
-        android:text="Hot"
+        android:text="Hot drinks"
         android:textColor="@color/gray"
-        android:textSize="20dp"
+        android:textSize="16sp"
         app:backgroundTint="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -73,9 +73,9 @@
         android:layout_width="136dp"
         android:layout_height="52dp"
         android:layout_marginTop="117dp"
-        android:text="Cold"
+        android:text="Cold drinks"
         android:textColor="@color/gray"
-        android:textSize="20dp"
+        android:textSize="16sp"
         app:backgroundTint="@android:color/transparent"
         app:layout_constraintStart_toEndOf="@+id/hotBtn"
         app:layout_constraintTop_toTopOf="parent" />

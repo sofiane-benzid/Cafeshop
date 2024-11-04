@@ -12,11 +12,11 @@ class PurchaseConfirmationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_purchase_confirmation)
-
+        // variables
         val receiptListView: ListView = findViewById(R.id.receiptListView)
         val totalPriceTextView: TextView = findViewById(R.id.totalPriceTextView)
-
         val itemAdapter = ReceiptAdapter(this, CartData.itemList)
+
         receiptListView.adapter = itemAdapter
 
         // Calculate total price

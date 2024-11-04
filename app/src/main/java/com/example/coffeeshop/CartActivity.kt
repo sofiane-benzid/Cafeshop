@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import com.example.coffeeshop.model.CartData
 import android.Manifest
+import android.util.Log
 import com.example.coffeeshop.model.ItemAdapter
 
 class CartActivity : AppCompatActivity() {
@@ -23,35 +24,30 @@ class CartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
+        // variables
+        val HomeBtn: ImageButton = findViewById(R.id.HomeBtn)
+        val checkOutBtn: Button = findViewById(R.id.checkOutBtn)
+        val CartList: ListView = findViewById(R.id.CartList)
+        val itemAdapter = ItemAdapter(this, CartData.itemList, ::updateTotalPrice)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1)
             }
         }
-
         createNotificationChannel(this)
-
-        val HomeBtn: ImageButton = findViewById(R.id.HomeBtn)
-        val checkOutBtn: Button = findViewById(R.id.checkOutBtn)
-
         checkOutBtn.setOnClickListener {
             sendOrderNotification(this)
             val intent = Intent(this, PurchaseConfirmationActivity::class.java)
             startActivity(intent)
         }
         updateTotalPrice()
-
         HomeBtn.setOnClickListener {
             val intent = Intent(this, MainPageActivity::class.java)
             intent.putExtra("USER", 1)
             startActivity(intent)
         }
-        val CartList: ListView = findViewById(R.id.CartList)
-
-        val itemAdapter = ItemAdapter(this, CartData.itemList, ::updateTotalPrice)
         CartList.adapter = itemAdapter
-
     }
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -62,9 +58,9 @@ class CartActivity : AppCompatActivity() {
         when (requestCode) {
             1 -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission granted, you can send notifications now
+                    Log.e("CartActivity", "Permission granted")
                 } else {
-                    // Permission denied, handle accordingly
+                    Log.e("CartActivity", "Permission not granted")
                 }
             }
         }
@@ -99,7 +95,6 @@ class CartActivity : AppCompatActivity() {
         val title = "Order Confirmation"
         val message = "Your order is being processed and prepared."
 
-        // Create an intent that will open your PurchaseConfirmationActivity when the notification is clicked
         val intent = Intent(context, PurchaseConfirmationActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -112,7 +107,7 @@ class CartActivity : AppCompatActivity() {
         )
 
         val notification = NotificationCompat.Builder(context, "order_channel")
-            .setSmallIcon(R.drawable.ic_notification) // Replace with your notification icon
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

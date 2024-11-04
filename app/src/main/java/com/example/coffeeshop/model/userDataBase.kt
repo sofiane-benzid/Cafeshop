@@ -8,34 +8,37 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import java.util.Base64
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 
-private val DataBaseName = "Users.db"
-private val ver : Int = 1
+private const val DATABASE_NAME = "Users.db"
+private const val DATABASE_VERSION = 1
 
-class userDataBase (context: Context) : SQLiteOpenHelper (context, DataBaseName, null, ver){
+class userDataBase (context: Context) : SQLiteOpenHelper (context, DATABASE_NAME, null, DATABASE_VERSION){
 
-    public val UserTableName = "User"
-    public val UserColumn_ID = "id"
-    public val UserColumn_firstName = "firstName"
-    public val UserColumn_lastName = "lastName"
-    public val UserColumn_email = "email"
-    public val UserColumn_password = "password"
-    public val UserColumn_dateOfBirth = "dateOfBirth"
+    private val USER_TABLE_NAME = "User"
+    private val USER_COLUMN_ID = "id"
+    private val USER_COLUMN_FIRST_NAME = "firstName"
+    private val USER_COLUMN_LAST_NAME = "lastName"
+    private val USER_COLUMN_EMAIL = "email"
+    private val USER_COLUMN_PASSWORD = "password"
+    private val USER_COLUMN_DATE_OF_BIRTH = "dateOfBirth"
 
     override fun onCreate(db: SQLiteDatabase?) {
         try {
-            var sqlCreateStatement: String = "CREATE TABLE " + UserTableName + " ( " + UserColumn_ID +
-                    " INTEGER PRIMARY KEY AUTOINCREMENT, " + UserColumn_firstName + " TEXT NOT NULL, " +
-                    UserColumn_lastName + " TEXT NOT NULL, " + UserColumn_email + " TEXT NOT NULL UNIQUE, " +
-                    UserColumn_password + " TEXT NOT NULL, " + UserColumn_dateOfBirth + " TEXT NOT NULL )"
+            var sqlCreateStatement: String = "CREATE TABLE " + USER_TABLE_NAME + " ( " + USER_COLUMN_ID +
+                    " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_COLUMN_FIRST_NAME + " TEXT NOT NULL, " +
+                    USER_COLUMN_LAST_NAME + " TEXT NOT NULL, " + USER_COLUMN_EMAIL + " TEXT NOT NULL UNIQUE, " +
+                    USER_COLUMN_PASSWORD + " TEXT NOT NULL, " + USER_COLUMN_DATE_OF_BIRTH + " TEXT NOT NULL )"
 
             db?.execSQL(sqlCreateStatement)
         }
-        catch(e : SQLException) {  }
+        catch(e : SQLException) {
+            Log.e("UserDatabase", "Error creating table", e)
+        }
 
     }
 
@@ -47,7 +50,7 @@ class userDataBase (context: Context) : SQLiteOpenHelper (context, DataBaseName,
 
         val userList = ArrayList<User>()
         val db: SQLiteDatabase = this.readableDatabase
-        val sqlStatement = "SELECT * FROM $UserTableName"
+        val sqlStatement = "SELECT * FROM $USER_TABLE_NAME"
 
         val cursor: Cursor = db.rawQuery(sqlStatement, null)
 
@@ -84,16 +87,15 @@ class userDataBase (context: Context) : SQLiteOpenHelper (context, DataBaseName,
             return -2
         }
 
-        val cv: ContentValues = ContentValues()
+        val cv = ContentValues()
         val hashedPassword = hashPassword(user.password)
-        cv.put(UserColumn_firstName, user.firstName)
-        cv.put(UserColumn_lastName,user.lastName)
-        cv.put(UserColumn_email, user.email.lowercase())
-        cv.put(UserColumn_password, hashedPassword)
-        cv.put(UserColumn_dateOfBirth,user.dateOfBirth)
+        cv.put(USER_COLUMN_FIRST_NAME, user.firstName)
+        cv.put(USER_COLUMN_LAST_NAME,user.lastName)
+        cv.put(USER_COLUMN_EMAIL, user.email.lowercase())
+        cv.put(USER_COLUMN_PASSWORD, hashedPassword)
+        cv.put(USER_COLUMN_DATE_OF_BIRTH,user.dateOfBirth)
 
-
-        val success  =  db.insert(UserTableName, null, cv)
+        val success  =  db.insert(USER_TABLE_NAME, null, cv)
 
         db.close()
         return success.toInt() //1
@@ -111,7 +113,7 @@ class userDataBase (context: Context) : SQLiteOpenHelper (context, DataBaseName,
 
         val email = user.email.lowercase()
 
-        val sqlStatement = "SELECT * FROM $UserTableName WHERE $UserColumn_email = ?"
+        val sqlStatement = "SELECT * FROM $USER_TABLE_NAME WHERE $USER_COLUMN_EMAIL = ?"
         val param = arrayOf(email)
         val cursor: Cursor =  db.rawQuery(sqlStatement,param)
 
@@ -139,10 +141,9 @@ class userDataBase (context: Context) : SQLiteOpenHelper (context, DataBaseName,
         }
 
         val email = user.email.lowercase()
-        val password = user.password
         val hashedPassword = hashPassword(user.password)
 
-        val sqlStatement = "SELECT * FROM $UserTableName WHERE $UserColumn_email = ? AND $UserColumn_password = ?"
+        val sqlStatement = "SELECT * FROM $USER_TABLE_NAME WHERE $USER_COLUMN_EMAIL = ? AND $USER_COLUMN_PASSWORD = ?"
         val param = arrayOf(email,hashedPassword)
         val cursor: Cursor =  db.rawQuery(sqlStatement,param)
         if(cursor.moveToFirst()){
@@ -166,7 +167,7 @@ class userDataBase (context: Context) : SQLiteOpenHelper (context, DataBaseName,
             return User(-2,"","","","","")
         }
 
-        val sqlStatement = "SELECT * FROM $UserTableName WHERE $UserColumn_email = ?"
+        val sqlStatement = "SELECT * FROM $USER_TABLE_NAME WHERE $USER_COLUMN_EMAIL = ?"
         val param = arrayOf(email.lowercase())
         val cursor: Cursor =  db.rawQuery(sqlStatement,param)
         if(cursor.moveToFirst()){
@@ -189,7 +190,7 @@ class userDataBase (context: Context) : SQLiteOpenHelper (context, DataBaseName,
     }
     fun clearDatabase() {
         val db = writableDatabase
-        db.execSQL("DELETE FROM $UserTableName") // Deletes all rows from the table
+        db.execSQL("DELETE FROM $USER_TABLE_NAME") // Deletes all rows from the table
         db.close()
     }
     @RequiresApi(Build.VERSION_CODES.O)

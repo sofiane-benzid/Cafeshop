@@ -2,42 +2,48 @@ package com.example.coffeeshop.model
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
-class ReviewsDataBase (context: Context) : SQLiteOpenHelper(context, "Reviews.db", null, 1){
+private const val DATABASE_NAME = "Reviews.db"
+private const val DATABASE_VERSION = 1
 
-    public val ReviewTableName = "Reviews"
-    public val ReviewColumn_ID = "ReviewID"
-    public val ReviewColumn_ItemID = "ItemID"
-    public val ReviewColumn_Text = "ReviewText"
-    public val ItemTableName = "Item"
-    public val ItemColumn_ID = "id"
+class ReviewsDataBase (context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION){
+
+    public val REVIEW_TABLE_NAME = "Reviews"
+    public val REVIEW_COLUMN_ID = "ReviewID"
+    public val REVIEW_COLUMN_ITEM_ID = "ItemID"
+    public val REVIEW_COLUMN_TEXT = "ReviewText"
+    public val ITEM_TABLE_NAME = "Item"
+    public val ITEM_COLUMN_ID = "id"
 
     override fun onCreate(db: SQLiteDatabase?) {
-        val createReviewTable = """
-        CREATE TABLE $ReviewTableName (
-            $ReviewColumn_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-            $ReviewColumn_ItemID INTEGER,
-            $ReviewColumn_Text TEXT NOT NULL,
-            FOREIGN KEY($ReviewColumn_ItemID) REFERENCES $ItemTableName($ItemColumn_ID) 
+        val sqlCreateStatement = """
+        CREATE TABLE $REVIEW_TABLE_NAME (
+            $REVIEW_COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            $REVIEW_COLUMN_ITEM_ID INTEGER,
+            $REVIEW_COLUMN_TEXT TEXT NOT NULL,
+            FOREIGN KEY($REVIEW_COLUMN_ITEM_ID) REFERENCES $ITEM_TABLE_NAME($ITEM_COLUMN_ID) 
         )
     """
-        db?.execSQL(createReviewTable)
+        try {
+            db?.execSQL(sqlCreateStatement)
+        } catch (e: SQLException) {
+            Log.e("ReviewsDatabase", "Error creating table", e)
+        }
     }
 
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("DROP TABLE IF EXISTS $ReviewTableName")
-        onCreate(db)
-    }
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
 
     fun addReview(itemID: Int, reviewText: String): Long {
         val db = this.writableDatabase
         val cv = ContentValues().apply {
-            put(ReviewColumn_ItemID, itemID)
-            put(ReviewColumn_Text, reviewText)
+            put(REVIEW_COLUMN_ITEM_ID, itemID)
+            put(REVIEW_COLUMN_TEXT, reviewText)
         }
-        val result = db.insert(ReviewTableName, null, cv)
+        val result = db.insert(REVIEW_TABLE_NAME, null, cv)
         db.close()
         return result
     }
@@ -45,7 +51,7 @@ class ReviewsDataBase (context: Context) : SQLiteOpenHelper(context, "Reviews.db
     fun getReviewsForItem(itemID: Int): ArrayList<String> {
         val db = this.readableDatabase
         val reviews = ArrayList<String>()
-        val cursor = db.rawQuery("SELECT $ReviewColumn_Text FROM $ReviewTableName WHERE $ReviewColumn_ItemID = ?", arrayOf(itemID.toString()))
+        val cursor = db.rawQuery("SELECT $REVIEW_COLUMN_TEXT FROM $REVIEW_TABLE_NAME WHERE $REVIEW_COLUMN_ITEM_ID = ?", arrayOf(itemID.toString()))
 
         if (cursor.moveToFirst()) {
             do {
@@ -59,7 +65,7 @@ class ReviewsDataBase (context: Context) : SQLiteOpenHelper(context, "Reviews.db
     }
     fun clearDatabase() {
         val db = writableDatabase
-        db.execSQL("DELETE FROM $ReviewTableName") // Deletes all rows from the table
+        db.execSQL("DELETE FROM $REVIEW_TABLE_NAME") // Deletes all rows from the table
         db.close()
     }
 }

@@ -9,17 +9,17 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.coffeeshop.model.CartData
 import com.example.coffeeshop.model.Item
-import com.example.coffeeshop.model.itemDataBase
+import com.example.coffeeshop.model.itemDatabase
 
 class ItemActivity : AppCompatActivity() {
 
-    val ItemDataBase = itemDataBase(this)
+    val ItemDataBase = itemDatabase(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item)
-
+        // variables
         val itemTxt: TextView = findViewById(R.id.itemTxt)
         var item: Item = intent.getSerializableExtra("ITEM") as Item
         val itmImg : ImageView = findViewById(R.id.itemImg)
@@ -37,7 +37,7 @@ class ItemActivity : AppCompatActivity() {
         ratingBar.rating = item.rating.toFloat()
 
         ratingBar.setOnRatingBarChangeListener { _, rating, _ ->
-            // Save rating in database or use as needed
+            // Save rating in database
             ItemDataBase.updateRating(item, rating.toDouble())
             item.rating = (item.rating * item.numberOfRatings + rating) / (item.numberOfRatings + 1)
             item.numberOfRatings += 1

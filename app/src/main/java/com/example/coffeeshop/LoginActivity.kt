@@ -15,7 +15,7 @@ import com.example.coffeeshop.model.User
 import com.example.coffeeshop.model.userDataBase
 
 class LoginActivity : AppCompatActivity() {
-    val myDataBase = userDataBase(this)
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)

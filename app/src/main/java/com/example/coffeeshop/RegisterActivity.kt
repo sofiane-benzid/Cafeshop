@@ -2,20 +2,25 @@ package com.example.coffeeshop
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.coffeeshop.model.User
 import com.example.coffeeshop.model.userDataBase
+import com.example.coffeeshop.model.utils
 
-class RegisterActivity : AppCompatActivity() {
+public class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+        // variables
         val registerButton: Button = findViewById(R.id.registerButton2)
+
         registerButton.setOnClickListener {
             var result = saveNewUserButton(this)
             if (result != -1 && result != -2 && result != -3){
@@ -28,10 +33,8 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
     }
-    fun isStrongPassword(password: String): Boolean {
-        return password.matches(Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{8,}$"))
-    }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun saveNewUserButton(context: Context): Int {
 
         val firstName = findViewById<EditText>(R.id.firstName).text.toString()
@@ -58,7 +61,7 @@ class RegisterActivity : AppCompatActivity() {
             message.text = "Password required!"
             message.setTextColor(ContextCompat.getColor(context, R.color.red))
         }
-        else if (isStrongPassword(password) == false){
+        else if (utils.isStrongPassword(password) == false){
             message.text = "Make sure the password has atleast one lowercase character, one uppercase letter, one digit, one special character and is atleast 8 characters long"
             message.setTextColor(ContextCompat.getColor(context, R.color.red))
         }
